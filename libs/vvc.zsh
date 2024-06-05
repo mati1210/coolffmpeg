@@ -7,16 +7,14 @@ vvc_prepare() {
     fetch Add-support-for-H266-VVC.patch https://patchwork.ffmpeg.org/series/11673/mbox/
 }
 
-
-
 vvc_run() {
+    local opts=(
+        -DCMAKE_INSTALL_PREFIX=$FFPREFIX
+        -DCMAKE_BUILD_TYPE=Release #doesn't work with build type none
+        -Wno-dev
+   )
     for lib ( vv{enc,dec} ) {
         pushd $FFBUILD/$lib
-
-        local opts=(
-            -DCMAKE_INSTALL_PREFIX=$FFPREFIX
-            -DCMAKE_BUILD_TYPE=Release #TODO: doesn't work without Release
-        )
 
         cmake -B build -S . $opts
         cmake --build build

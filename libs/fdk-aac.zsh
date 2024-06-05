@@ -10,6 +10,7 @@ fdk-aac_run(){
 		-DCMAKE_INSTALL_PREFIX=$FFPREFIX
 		-DCMAKE_BUILD_TYPE=Release
 		-DBUILD_SHARED_LIBS=OFF
+		-Wno-dev
 	)
 
 	cmake -B build -S . $opts

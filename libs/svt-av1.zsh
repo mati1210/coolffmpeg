@@ -11,6 +11,7 @@ svt-av1_run(){
 		-DCMAKE_INSTALL_PREFIX=$FFPREFIX
 		-DCMAKE_BUILD_TYPE=None
 		-DBUILD_{DEC,APPS,SHARED_LIBS}=OFF
+		-Wno-dev
 	)
 
 	cmake -B build -S . $opts
