@@ -14,7 +14,7 @@ FFBUILD=${${FFBUILD:-$SCRIPTDIR/build}:A}
 FFSRC=${${FFSRC:-$SCRIPTDIR/src}:A}
 
 # libs to include
-: ${LIBS:="opus svt-av1 vvc fdk-aac"}
+: ${LIBS:="opus svt-av1 vvc fdk-aac jxl"}
 
 ## END CONFIG
 
@@ -61,7 +61,7 @@ typeset -U ffmpegopts=(
 	--pkg-config-flags="--static"
 	--extra-cflags="$CFLAGS -I$FFPREFIX/include"
 	--extra-ldflags="-L$FFPREFIX/lib"
-	--extra-libs="-lpthread -lm -lz"
+	--extra-libs="-lpthread -lm -lz -lstdc++"
 	--extra-ldexeflags="-static"
 
 	--enable-{pic,lto}
