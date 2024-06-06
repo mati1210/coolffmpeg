@@ -41,7 +41,7 @@ fetchgit() {
 	local name=$1 url=$2 branch=$3
 	local src=$FFSRC/$name build=$FFBUILD/$name
 	if [[ ! -d $src ]] {
-		git clone --bare $url $src
+		git clone --mirror $url $src
 	} else {
 		git -C $src fetch --all -p
 	}
