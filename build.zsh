@@ -23,38 +23,18 @@ export MAKEFLAGS=${MAKEFLAGS:- -j$(nproc)}
 export C{,XX}FLAGS="-O3 -march=native -pipe -flto"
 export PKG_CONFIG_PATH="$FFPREFIX/lib/pkgconfig"
 
-needscmd() {
-	for command ( $@ ) {
-		if (( $+commands[$command] )) { continue }
+## END CONFIG
 
-		echo program $command not found!
-		exit 1
-	}
-}
+export MAKEFLAGS C{,XX}FLAGS PKG_CONFIG_PATH="$FFPREFIX/lib/pkgconfig"
+mkdir -p $FFBUILD $FFPREFIX/{bin,lib/pkgconfig,include} $FFSRC
+autoload fetchgit needscmd
+
 needscmd git aria2c
-
 fetch() {
 	local file=$1 url=$2
 	if [[ ! -e $FFSRC/$file ]] { aria2c -UWget -s4 -x4 $url --dir / -o $FFSRC/$file }
 }
 
-fetchgit() {
-	local name=$1 url=$2 branch=$3
-	local src=$FFSRC/$name build=$FFBUILD/$name
-	if [[ ! -d $src ]] {
-		git clone --mirror $url $src
-	} else {
-		git -C $src fetch --all -p
-	}
-
-	(( $+RESET )) && rm -rf $build
-	if [[ ! -d $build ]] {
-		git clone $src $build -b $branch
-	} else {
-		git -C $build pull
-	}
-}
-mkdir -p $FFBUILD $FFPREFIX/{bin,lib/pkgconfig,include} $FFSRC
 RESET=1 fetchgit ffmpeg https://git.ffmpeg.org/ffmpeg.git master
 
 typeset -U \
