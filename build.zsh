@@ -56,21 +56,23 @@ fetchgit() {
 mkdir -p $FFBUILD $FFPREFIX/{bin,lib/pkgconfig,include} $FFSRC
 RESET=1 fetchgit ffmpeg https://git.ffmpeg.org/ffmpeg.git master
 
-typeset -U ffmpegopts=(
-	--prefix=$FFPREFIX
-	--pkg-config-flags="--static"
-	--extra-cflags="$CFLAGS -I$FFPREFIX/include"
-	--extra-ldflags="-L$FFPREFIX/lib"
-	--extra-libs="-lpthread -lm -lz -lstdc++"
-	--extra-ldexeflags="-static"
+typeset -U \
+	ffmpegopts=(
+		--prefix=$FFPREFIX
+		--pkg-config-flags="--static"
+		--extra-cflags="$CFLAGS -I$FFPREFIX/include"
+		--extra-ldflags="-L$FFPREFIX/lib"
+		--extra-libs="-lpthread -lm -lz -lstdc++"
+		--extra-ldexeflags="-static"
 
-	--enable-{pic,lto}
-	--disable-{stripping,ffprobe,doc,autodetect}
-) ffmpegpatches=()
+		--enable-{pic,lto}
+		--disable-{stripping,ffprobe,doc,autodetect}
+	) \
+	ffmpegpatches=() \
+	LIBS=( ${=LIBS} ) \
+	PREPARED=() \
+	BUILT=()
 
-typeset -U LIBS=( ${=LIBS} )
-PREPARED=()
-BUILT=()
 prepare() {
 	for lib ( $@ ) {
 		(( $PREPARED[(Ie)$lib] )) && continue
