@@ -1,0 +1,12 @@
+#!/usr/bin/zsh
+local dir=$1
+shift
+
+pushd $dir
+cmake -B build -S . \
+	-Wno-dev \
+	-DCMAKE_INSTALL_PREFIX=$FFPREFIX \
+	$@
+cmake --build build
+cmake --install build
+popd

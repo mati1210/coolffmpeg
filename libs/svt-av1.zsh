@@ -5,19 +5,10 @@ svt-av1_prepare(){
 
 
 svt-av1_run(){
-    pushd $FFBUILD/svt-av1
-
 	local opts=(
-		-DCMAKE_INSTALL_PREFIX=$FFPREFIX
 		-DCMAKE_BUILD_TYPE=None
 		-DBUILD_{DEC,APPS,SHARED_LIBS}=OFF
-		-Wno-dev
 	)
-
-	cmake -B build -S . $opts
-	cmake --build build
-	cmake --install build
-
+	cmake_wrapper $FFBUILD/svt-av1 $opts
 	ffmpegopts+='--enable-libsvtav1'
-	popd
 }

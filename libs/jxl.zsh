@@ -16,21 +16,12 @@ jxl_prepare(){
 
 
 jxl_run(){
-    pushd $FFBUILD/libjxl
-
 	local opts=(
-		-DCMAKE_INSTALL_PREFIX=$FFPREFIX
 		-DCMAKE_BUILD_TYPE=None
 		-DBUILD_{SHARED_LIBS,TESTING}=OFF
 		-DJPEGXL_ENABLE_{BENCHMARK,FUZZERS,PLUGINS,EXAMPLES,VIEWERS,JNI,MANPAGES,DOXYGEN,JPEGLI,TOOLS}:BOOL=false
 		-DJPEGXL_STATIC:BOOL=true
-		-Wno-dev
 	)
-
-	cmake -B build -S . $opts
-	cmake --build build
-	cmake --install build
-
+	cmake_wrapper $FFBUILD/libjxl $opts
 	ffmpegopts+='--enable-libjxl'
-	popd
 }

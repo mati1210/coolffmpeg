@@ -1,6 +1,7 @@
 #!/bin/zsh -e
 zmodload zsh/parameter
 SCRIPTDIR=${0:h:A}
+fpath=( $SCRIPTDIR/functions $fpath )
 
 ## CONFIG
 
@@ -92,6 +93,8 @@ build() {
 		BUILT+=$lib
 	}
 }
+autoload -Uz cmake_wrapper
+
 prepare $LIBS
 build $LIBS
 
