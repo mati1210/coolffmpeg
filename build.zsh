@@ -17,11 +17,13 @@ FFSRC=${${FFSRC:-$SCRIPTDIR/src}:A}
 # libs to include
 : ${LIBS:="opus svt-av1 vvc fdk-aac jxl"}
 
-## END CONFIG
+# default to building with all cores
+: ${MAKEFLAGS:= -j$(nproc)}
 
-export MAKEFLAGS=${MAKEFLAGS:- -j$(nproc)}
-export C{,XX}FLAGS="-O3 -march=native -pipe -flto"
-export PKG_CONFIG_PATH="$FFPREFIX/lib/pkgconfig"
+# compiler flags
+: ${TGTARCH:=native}
+: ${CFLAGS:="-O3 -march=$TGTARCH -pipe -flto"}
+: ${CXXFLAGS:=$CFLAGS}
 
 ## END CONFIG
 
