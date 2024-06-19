@@ -15,7 +15,7 @@ FFBUILD=${${FFBUILD:-$SCRIPTDIR/build}:A}
 FFSRC=${${FFSRC:-$SCRIPTDIR/src}:A}
 
 # libs to include
-: ${LIBS:="opus svt-av1 vvc fdk-aac jxl"}
+: ${LIBS:="opus svt-av1 vvenc fdk-aac jxl"}
 
 # default to building with all cores
 : ${MAKEFLAGS:= -j$(nproc)}
