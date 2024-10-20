@@ -9,5 +9,5 @@ fdk-aac_run(){
 		-DBUILD_SHARED_LIBS=OFF
 	)
 	cmake_wrapper $FFBUILD/fdk-aac $opts
-	ffmpegopts+='--enable-libfdk-aac'
+	ffmpegopts+=( --enable-nonfree --enable-libfdk-aac)
 }
