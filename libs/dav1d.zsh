@@ -6,18 +6,18 @@ dav1d_prepare(){
 
 dav1d_run(){
 	pushd $FFBUILD/dav1d
-	local args=(
+	local opts=(
 		--prefix $FFPREFIX
 		--default-library static
 
 		-Denable_{tools,tests}=false
 	)
 	if (( $+CROSSCOMPILE )) {
-		args+=(
+		opts+=(
 			--cross-file $CROSSCOMPILE
 		)
 	}
-	meson setup $args build
+	meson setup $opts build
 	meson compile -C build
 	meson install -C build
 	popd
