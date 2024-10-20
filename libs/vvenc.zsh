@@ -9,5 +9,7 @@ vvenc_run() {
         -DVVENC_LIBRARY_ONLY=ON
    )
     cmake_wrapper $FFBUILD/vvenc $opts
+
+    sed -i 's/-lgcc_s//g' $FFPREFIX/lib/pkgconfig/libvvenc.pc #fixes configure error
     ffmpegopts+="--enable-libvvenc"
 }
