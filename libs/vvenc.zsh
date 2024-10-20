@@ -6,6 +6,7 @@ vvenc_prepare() {
 vvenc_run() {
     local opts=(
         -DCMAKE_BUILD_TYPE=Release #doesn't work with build type none
+        -DVVENC_LIBRARY_ONLY=ON
    )
     cmake_wrapper $FFBUILD/vvenc $opts
     ffmpegopts+="--enable-libvvenc"
