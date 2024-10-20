@@ -1,0 +1,7 @@
+#!/bin/zsh
+for command ( $@ ) {
+    if (( $+commands[$command] )) { continue }
+
+    echo program $command not found!
+    exit 1
+}
