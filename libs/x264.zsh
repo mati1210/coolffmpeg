@@ -8,8 +8,17 @@ x264_run() {
 	local opts=(
 		--prefix=$FFPREFIX
 		--disable-cli
+		--disable-opencl
 		--enable-static
 	)
+
+	if (( $+CROSSCOMPILE )) {
+		opts+=(
+			--cross-prefix=$CROSSCOMPILE-
+			--host=$CROSSCOMPILE
+		)
+	}
+
 	./configure $opts
 	make
 	make install

@@ -1,0 +1,8 @@
+#!/bin/zsh
+local os
+case $CROSSCOMPILE in
+    *-w64-*) os=windows;;
+    *-android*) os=android;;
+    *-linux-*) os=linux;;
+esac
+echo $os

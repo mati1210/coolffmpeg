@@ -14,6 +14,12 @@ opus_run() {
 		# ml
 		--enable-{dred,osce}
 	)
+	if (( $+CROSSCOMPILE )) {
+		opts+=(
+			--host=$CROSSCOMPILE
+		)
+	}
+
 	./autogen.sh
 	./configure $opts
 	make install

@@ -14,6 +14,10 @@ FFBUILD=${${FFBUILD:-$SCRIPTDIR/build}:A}
 # source directory
 FFSRC=${${FFSRC:-$SCRIPTDIR/src}:A}
 
+# if set, will cross compile with specific compiler
+# for example CROSSCOMPILE="aarch64-linux-gnu"
+# CROSSCOMPILE="x86_64-linux-gnu"
+
 # libs to include
 : ${LIBS:="opus svt-av1 dav1d vvenc fdk-aac jxl x264"}
 
@@ -27,9 +31,10 @@ FFSRC=${${FFSRC:-$SCRIPTDIR/src}:A}
 
 ## END CONFIG
 
-export MAKEFLAGS C{,XX}FLAGS PKG_CONFIG_PATH="$FFPREFIX/lib/pkgconfig"
+export MAKEFLAGS C{,XX}FLAGS PKG_CONFIG_PATH="$FFPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 mkdir -p $FFBUILD $FFPREFIX/{bin,lib/pkgconfig,include} $FFSRC
 autoload fetchgit needscmd
+autoload -Uz cmake_wrapper getos
 
 needscmd git aria2c
 fetch() {
@@ -45,7 +50,7 @@ typeset -U \
 		--pkg-config-flags="--static"
 		--extra-cflags="$CFLAGS -I$FFPREFIX/include"
 		--extra-ldflags="-L$FFPREFIX/lib"
-		--extra-libs="-lpthread -lm -lz -lstdc++"
+		--extra-libs="-lpthread -lm -lstdc++"
 		--extra-ldexeflags="-static"
 
 		--enable-{pic,lto}
@@ -75,10 +80,22 @@ build() {
 		BUILT+=$lib
 	}
 }
-autoload -Uz cmake_wrapper
+
 
 prepare $LIBS
 build $LIBS
+
+if (( $+CROSSCOMPILE )) {
+	ARCH=${${(s[-])CROSSCOMPILE}[1]}
+	OS=$(getos)
+	if [[ $OS = windows ]] OS=win64
+
+	ffmpegopts+=(
+		--enable-cross-compile
+		--cross-prefix=$CROSSCOMPILE-
+		--arch=$ARCH --target-os=$OS
+	)
+}
 
 pushd $FFBUILD/ffmpeg
 for patch ( $ffmpegpatches ) {

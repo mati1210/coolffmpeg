@@ -12,6 +12,11 @@ dav1d_run(){
 
 		-Denable_{tools,tests}=false
 	)
+	if (( $+CROSSCOMPILE )) {
+		args+=(
+			--cross-file $CROSSCOMPILE
+		)
+	}
 	meson setup $args build
 	meson compile -C build
 	meson install -C build

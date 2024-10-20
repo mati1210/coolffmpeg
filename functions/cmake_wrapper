@@ -2,11 +2,27 @@
 local dir=$1
 shift
 
-pushd $dir
-cmake -B build -S . \
-	-Wno-dev \
-	-DCMAKE_INSTALL_PREFIX=$FFPREFIX \
+local opts=(
+	-Wno-dev
+	-DCMAKE_INSTALL_PREFIX=$FFPREFIX
+
 	$@
+)
+
+if (( $+CROSSCOMPILE )) {
+	ARCH=${${(s[-])CROSSCOMPILE}[1]}
+	OS=$(getos)
+	if [[ $OS = windows ]] OS=Windows
+	if [[ $OS = linux ]] OS=Linux
+	opts+=(
+		-DCMAKE_SYSTEM_NAME=$OS
+		-DCMAKE_SYSTEM_PROCESSOR=$ARCH
+		-DCMAKE_C{,XX}_COMPILER=$CROSSCOMPILE-gcc
+		-DCMAKE_FIND_ROOT_PATH=/usr/$CROSSCOMPILE
+	)
+}
+pushd $dir
+cmake -B build -S . $opts
 cmake --build build
 cmake --install build
 popd
